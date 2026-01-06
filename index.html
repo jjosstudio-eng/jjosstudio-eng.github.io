@@ -4,716 +4,261 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>FlavorLink | Shared flavors, shared memory</title>
-  <meta name="description" content="FlavorLink - 대체 원료 기반 맛 솔루션. 원물 없이 원물의 맛을 재현합니다." />
+  <meta name="description" content="FlavorLink - 원물 없이 원물의 맛을 재현하는 대체 원료 기반 솔루션" />
 
-  <!-- Fonts (optional) -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      /* KEY COLORS (image-inspired) */
-      --bg: #F7EFE7;      /* warm cream */
-      --paper: #FFF9F2;   /* light paper */
-      --ink: #1D1D1D;     /* near-black */
-      --muted:#5A514B;    /* warm gray */
-      --line:#F05A28;     /* Nongshim-ish orange */
-      --line2:#FF6B3D;
-      --shadow: 0 18px 40px rgba(20,10,5,.12);
-      --radius: 18px;
-      --radius2: 24px;
-      --max: 1100px;
+      --bg:#F7EFE7;
+      --paper:#FFF9F2;
+      --ink:#1D1D1D;
+      --muted:#5A514B;
+      --orange:#F05A28;
+      --orange2:#FF6B3D;
+      --radius:20px;
+      --radius2:26px;
+      --shadow:0 18px 40px rgba(20,10,5,.12);
+      --max:1100px;
     }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
+    *{box-sizing:border-box;}
     body{
       margin:0;
-      background:
-        radial-gradient(900px 600px at 15% 10%, rgba(240,90,40,.10), transparent 55%),
-        radial-gradient(800px 560px at 85% 18%, rgba(240,90,40,.08), transparent 58%),
-        radial-gradient(900px 600px at 75% 92%, rgba(240,90,40,.06), transparent 60%),
-        var(--bg);
-      color: var(--ink);
-      font-family: "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      letter-spacing: -0.2px;
+      font-family:"Noto Sans KR",system-ui,sans-serif;
+      background:var(--bg);
+      color:var(--ink);
       overflow-x:hidden;
     }
+    a{text-decoration:none;color:inherit;}
+    .wrap{width:min(var(--max),92vw);margin:0 auto;}
 
-    a{ color:inherit; text-decoration:none; }
-    .wrap{ width:min(var(--max), 92vw); margin:0 auto; }
-
-    /* Top nav */
+    /* Header */
     header{
-      position: sticky; top: 0; z-index: 50;
-      backdrop-filter: blur(10px);
-      background: rgba(247,239,231,.78);
-      border-bottom: 1px solid rgba(240,90,40,.18);
+      position:sticky;top:0;z-index:10;
+      background:rgba(247,239,231,.9);
+      border-bottom:1px solid rgba(240,90,40,.2);
+      backdrop-filter:blur(10px);
     }
     .nav{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px; padding: 14px 0;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 0;
     }
     .brand{
-      display:flex; align-items:center; gap:12px;
-      min-width: 220px;
+      display:flex;gap:12px;align-items:center;
     }
-    .mark{
-      width: 42px; height: 42px; border-radius: 16px;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,.95), rgba(255,255,255,.0) 60%),
-        linear-gradient(135deg, var(--line), var(--line2));
-      box-shadow: 0 14px 26px rgba(240,90,40,.18);
-      border: 1px solid rgba(240,90,40,.25);
-      position:relative;
-      overflow:hidden;
+    .logo{
+      width:42px;height:42px;border-radius:16px;
+      background:linear-gradient(135deg,var(--orange),var(--orange2));
+      box-shadow:0 12px 24px rgba(240,90,40,.3);
     }
-    .mark:after{
-      content:"";
-      position:absolute; inset:-40%;
-      background: conic-gradient(from 180deg, rgba(255,255,255,.0), rgba(255,255,255,.35), rgba(255,255,255,0));
-      transform: rotate(25deg);
-      opacity:.55;
-      animation: sheen 5.5s ease-in-out infinite;
+    .brand b{
+      font-family:"Fraunces",serif;
+      color:var(--orange);
+      font-size:18px;
     }
-    @keyframes sheen{
-      0%,100%{ transform: translateX(-18%) rotate(25deg); opacity:.35; }
-      50%{ transform: translateX(18%) rotate(25deg); opacity:.6; }
+    .brand span{
+      display:block;font-size:12px;color:var(--muted);
     }
-
-    .brandTitle{
-      display:flex; flex-direction:column; line-height:1.05;
+    nav a{
+      margin-left:14px;font-size:14px;color:#333;
     }
-    .brandTitle b{
-      font-family: "Fraunces", serif;
-      font-size: 16px;
-      letter-spacing: 0.2px;
-      color: var(--line);
-    }
-    .brandTitle span{
-      font-size: 12px;
-      color: rgba(90,81,75,.85);
-      margin-top: 2px;
-    }
-
-    .navlinks{
-      display:flex; align-items:center; gap:10px;
-      font-size: 14px;
-      color: rgba(29,29,29,.78);
-    }
-    .navlinks a{
-      padding: 9px 12px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      transition: .18s ease;
-    }
-    .navlinks a:hover{
-      border-color: rgba(240,90,40,.22);
-      background: rgba(255,249,242,.75);
-      transform: translateY(-1px);
-    }
-
     .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      gap:10px;
-      padding: 11px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(240,90,40,.25);
-      background: rgba(255,249,242,.75);
-      color: rgba(29,29,29,.88);
-      font-weight: 700;
+      padding:10px 16px;border-radius:999px;
+      border:1px solid rgba(240,90,40,.3);
+      background:var(--paper);
+      font-weight:700;
       cursor:pointer;
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-      user-select:none;
-      white-space:nowrap;
-    }
-    .btn:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 12px 26px rgba(240,90,40,.14);
     }
     .btn.primary{
-      background: linear-gradient(135deg, var(--line), var(--line2));
-      color: #fff;
-      border-color: rgba(240,90,40,.55);
-      box-shadow: 0 18px 34px rgba(240,90,40,.20);
-    }
-    .btn.primary:hover{ box-shadow: 0 22px 44px rgba(240,90,40,.25); }
-
-    .menuBtn{ display:none; }
-    .burger{ width: 18px; height: 12px; position: relative; }
-    .burger span{
-      position:absolute; left:0; right:0; height:2px;
-      background: rgba(29,29,29,.85);
-      border-radius: 999px;
-      transition:.2s ease;
-    }
-    .burger span:nth-child(1){ top:0; }
-    .burger span:nth-child(2){ top:5px; opacity:.8; }
-    .burger span:nth-child(3){ bottom:0; opacity:.65; }
-    body.menuOpen .burger span:nth-child(1){ transform: translateY(5px) rotate(45deg); }
-    body.menuOpen .burger span:nth-child(2){ opacity:0; transform: translateX(6px); }
-    body.menuOpen .burger span:nth-child(3){ transform: translateY(-5px) rotate(-45deg); opacity:1; }
-
-    .mobileMenu{ display:none; padding: 0 0 14px; }
-    .mobileMenu a{
-      display:block;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(240,90,40,.18);
-      background: rgba(255,249,242,.78);
-      margin-top: 8px;
+      background:linear-gradient(135deg,var(--orange),var(--orange2));
+      color:#fff;
+      box-shadow:0 12px 28px rgba(240,90,40,.35);
     }
 
-    /* HERO */
-    main{ position: relative; }
+    /* Hero */
     .hero{
-      padding: 30px 0 8px;
-      position: relative;
-    }
-
-    /* big orange curves (svg) behind */
-    .curves{
-      position:absolute;
-      inset: -60px -80px auto -80px;
-      height: 520px;
-      z-index:0;
-      pointer-events:none;
-      opacity:.9;
+      padding:32px 0;
     }
     .heroGrid{
-      position: relative;
-      z-index:1;
       display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 18px;
-      align-items: stretch;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
     }
-
     .panel{
-      background: rgba(255,249,242,.82);
-      border: 1px solid rgba(240,90,40,.18);
-      border-radius: var(--radius2);
-      box-shadow: var(--shadow);
+      background:var(--paper);
+      border-radius:var(--radius2);
+      box-shadow:var(--shadow);
+      padding:24px;
     }
-    .heroLeft{
-      padding: 26px 22px 22px;
-      position:relative;
-      overflow:hidden;
+    .hero h1{
+      font-family:"Fraunces",serif;
+      font-size:42px;
+      line-height:1.05;
+      margin:0 0 12px;
     }
-    .kicker{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin-bottom: 14px;
-      align-items:center;
-    }
-    .pill{
-      font-size: 12px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(240,90,40,.20);
-      background: rgba(255,255,255,.6);
-      color: rgba(29,29,29,.78);
-    }
-    .pill strong{ color: var(--line); font-weight: 800; }
-    .title{
-      font-family: "Fraunces", serif;
-      font-size: clamp(30px, 3.4vw, 48px);
-      line-height: 1.02;
-      margin: 0 0 10px 0;
-      letter-spacing: .2px;
-    }
-    .subtitle{
-      margin: 0;
-      color: rgba(90,81,75,.92);
-      font-size: 15px;
-      line-height: 1.65;
-      max-width: 62ch;
+    .hero p{
+      color:var(--muted);
+      line-height:1.7;
+      font-size:15px;
     }
     .heroActions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top: 16px;
-      align-items:center;
-    }
-    .hint{
-      display:flex; gap:8px; align-items:center;
-      margin-top: 12px;
-      color: rgba(90,81,75,.78);
-      font-size: 13px;
-    }
-    .spark{
-      width: 9px; height: 9px;
-      border-radius: 999px;
-      background: var(--line);
-      box-shadow: 0 0 0 6px rgba(240,90,40,.14);
+      margin-top:18px;
+      display:flex;gap:10px;flex-wrap:wrap;
     }
 
-    /* Right: keyvisual card */
-    .heroRight{
-      padding: 16px;
-      overflow:hidden;
-      position:relative;
-    }
-    .kvFrame{
-      border-radius: 18px;
-      overflow:hidden;
-      border: 1px solid rgba(240,90,40,.18);
-      background: linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,249,242,.95));
-      box-shadow: 0 18px 34px rgba(20,10,5,.10);
-      position:relative;
-    }
-    .kvFrame img{
-      width: 100%;
-      height: auto;
+    /* Key Visual */
+    .kv img{
+      width:100%;
+      border-radius:18px;
       display:block;
-      object-fit: cover;
-    }
-    .kvLabel{
-      position:absolute;
-      left: 14px;
-      top: 14px;
-      display:flex;
-      gap: 8px;
-      flex-wrap:wrap;
-      z-index:2;
     }
 
-    /* FEATURES */
-    section{ padding: 26px 0; }
-    .secHead{
-      display:flex;
-      justify-content: space-between;
-      align-items:flex-end;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-    .secHead h2{
-      margin:0;
-      font-family:"Fraunces", serif;
-      font-size: 20px;
-      letter-spacing: .2px;
-      color: rgba(29,29,29,.92);
-    }
-    .secHead p{
-      margin:0;
-      color: rgba(90,81,75,.86);
-      font-size: 13px;
-      line-height: 1.5;
-      max-width: 64ch;
-    }
-
+    /* Features */
+    section{padding:28px 0;}
     .cards{
       display:grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: 14px;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
     }
     .card{
-      border-radius: var(--radius);
-      border: 1px solid rgba(240,90,40,.18);
-      background: rgba(255,249,242,.82);
-      box-shadow: 0 16px 30px rgba(20,10,5,.08);
-      padding: 16px;
-      position:relative;
-      overflow:hidden;
-      transition: transform .16s ease, box-shadow .16s ease;
-      min-height: 164px;
+      background:var(--paper);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
     }
-    .card:hover{
-      transform: translateY(-3px);
-      box-shadow: 0 22px 42px rgba(20,10,5,.11);
-    }
-    .icon{
-      width: 44px; height: 44px;
-      border-radius: 16px;
-      border: 1px solid rgba(240,90,40,.22);
-      background: rgba(255,255,255,.64);
-      display:grid; place-items:center;
-      box-shadow: 0 12px 22px rgba(240,90,40,.10);
-      position:relative;
-      overflow:hidden;
-    }
-    .icon:after{
-      content:"";
-      position:absolute; inset:-30%;
-      background: radial-gradient(circle at 30% 30%, rgba(240,90,40,.35), transparent 60%);
-      opacity:.8;
-    }
-    .icon svg{ position:relative; z-index:1; }
-    .card h3{
-      margin: 12px 0 6px 0;
-      font-size: 16px;
-      letter-spacing: -.2px;
-    }
-    .card p{
-      margin:0;
-      color: rgba(90,81,75,.90);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-    .stroke{
-      position:absolute;
-      right: -38px;
-      bottom: -42px;
-      width: 150px;
-      height: 150px;
-      border-radius: 999px;
-      border: 3px solid rgba(240,90,40,.18);
-      transform: rotate(20deg);
-      pointer-events:none;
-    }
+    .card h3{margin:10px 0 6px;}
+    .card p{font-size:13px;color:var(--muted);line-height:1.6;}
 
-    /* CTA band */
+    /* CTA */
     .cta{
-      border-radius: var(--radius2);
-      border: 1px solid rgba(240,90,40,.22);
-      background:
-        radial-gradient(700px 300px at 15% 30%, rgba(240,90,40,.12), transparent 60%),
-        radial-gradient(700px 300px at 85% 30%, rgba(240,90,40,.10), transparent 60%),
-        rgba(255,249,242,.86);
-      box-shadow: var(--shadow);
-      padding: 20px;
+      background:linear-gradient(135deg,var(--orange),var(--orange2));
+      color:#fff;
+      border-radius:var(--radius2);
+      padding:24px;
       display:flex;
-      justify-content: space-between;
+      justify-content:space-between;
       align-items:center;
-      gap: 14px;
-      position:relative;
-      overflow:hidden;
+      gap:16px;
     }
-    .cta:before{
-      content:"";
-      position:absolute;
-      inset:-40px -80px auto -80px;
-      height: 220px;
-      background:
-        radial-gradient(circle at 20% 60%, rgba(240,90,40,.18), transparent 62%),
-        radial-gradient(circle at 80% 20%, rgba(240,90,40,.14), transparent 62%);
-      opacity:.9;
-      pointer-events:none;
-    }
-    .ctaTxt{
-      position:relative;
-      z-index:1;
-    }
-    .cta h3{
-      margin:0 0 6px 0;
-      font-family:"Fraunces", serif;
-      font-size: 18px;
-    }
-    .cta p{
-      margin:0;
-      color: rgba(90,81,75,.90);
-      font-size: 13px;
-      line-height: 1.55;
-      max-width: 64ch;
-    }
-    .ctaActions{
-      position:relative;
-      z-index:1;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .btn.ghost{
-      border-style: dashed;
-      background: rgba(255,255,255,.62);
-    }
+    .cta p{opacity:.9;font-size:14px;}
 
     /* Footer */
     footer{
-      padding: 26px 0 34px;
-      border-top: 1px solid rgba(240,90,40,.18);
-      background: rgba(255,249,242,.55);
-    }
-    .footerGrid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 16px;
-      align-items:start;
-    }
-    .fine{
-      margin-top: 8px;
-      font-size: 12px;
-      line-height: 1.6;
-      color: rgba(90,81,75,.82);
-    }
-    .footLinks{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      align-items:center;
-    }
-    .footLinks a{
-      font-size: 13px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(240,90,40,.18);
-      background: rgba(255,255,255,.58);
-      transition:.16s ease;
-    }
-    .footLinks a:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 12px 22px rgba(240,90,40,.12);
+      padding:26px 0;
+      border-top:1px solid rgba(240,90,40,.2);
+      background:var(--paper);
+      font-size:13px;
+      color:var(--muted);
     }
 
-    /* Responsive */
-    @media (max-width: 940px){
-      .heroGrid{ grid-template-columns: 1fr; }
-      .cards{ grid-template-columns: 1fr; }
-      .footerGrid{ grid-template-columns: 1fr; }
-      .footLinks{ justify-content:flex-start; }
-      .cta{ flex-direction:column; align-items:flex-start; }
-      .ctaActions{ justify-content:flex-start; }
-      .curves{ height: 420px; }
-    }
-    @media (max-width: 740px){
-      .navlinks{ display:none; }
-      .menuBtn{ display:inline-flex; }
-      .mobileMenu{ display:none; }
-      body.menuOpen .mobileMenu{ display:block; }
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      .mark:after{ animation:none; }
-      .card, .btn, .navlinks a, .footLinks a{ transition:none; }
+    /* Mobile */
+    @media(max-width:900px){
+      .heroGrid{grid-template-columns:1fr;}
+      .cards{grid-template-columns:1fr;}
+      .cta{flex-direction:column;align-items:flex-start;}
     }
   </style>
 </head>
 
 <body>
+
 <header>
-  <div class="wrap">
-    <div class="nav" id="navRoot">
-      <a class="brand" href="#top" aria-label="FlavorLink Home">
-        <div class="mark" aria-hidden="true"></div>
-        <div class="brandTitle">
-          <b>FlavorLink</b>
-          <span>Shared flavors, shared memory</span>
-        </div>
-      </a>
-
-      <nav class="navlinks" aria-label="Primary">
-        <a href="#about">소개</a>
-        <a href="#features">기능</a>
-        <a href="#cta">문의</a>
-      </nav>
-
-      <div style="display:flex; gap:10px; align-items:center;">
-        <a class="btn primary" href="#cta">협업 문의 ↗</a>
-        <button class="btn menuBtn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
-          <span class="burger" aria-hidden="true"><span></span><span></span><span></span></span>
-        </button>
+  <div class="wrap nav">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <b>FlavorLink</b>
+        <span>Shared flavors, shared memory</span>
       </div>
     </div>
-
-    <div class="mobileMenu" id="mobileMenu" aria-label="Mobile Menu">
+    <nav>
       <a href="#about">소개</a>
       <a href="#features">기능</a>
       <a href="#cta">문의</a>
-      <a href="product.html" title="다음에 만들 상품 페이지">상품페이지(예정)</a>
-    </div>
+    </nav>
+    <a class="btn primary" href="#cta">협업 문의</a>
   </div>
 </header>
 
-<main id="top">
-  <!-- Orange curve lines behind hero -->
-  <svg class="curves" viewBox="0 0 1200 520" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M1200 110 C 980 40, 820 240, 610 210 C 380 175, 310 330, 120 360" stroke="rgba(240,90,40,.55)" stroke-width="6" stroke-linecap="round"/>
-    <path d="M80 160 C 220 80, 370 120, 470 240 C 570 360, 760 380, 900 300 C 1040 220, 1110 260, 1200 350" stroke="rgba(240,90,40,.40)" stroke-width="6" stroke-linecap="round"/>
-    <path d="M1200 30 C 980 120, 940 470, 640 440 C 340 410, 250 510, 0 500" stroke="rgba(240,90,40,.28)" stroke-width="6" stroke-linecap="round"/>
-  </svg>
+<main>
 
-  <!-- HERO -->
-  <section class="hero" id="about">
-    <div class="wrap">
-      <div class="heroGrid">
-        <div class="panel heroLeft">
-          <div class="kicker">
-            <span class="pill"><strong>맛의 혁신</strong> · 원물 없이 원물의 맛</span>
-            <span class="pill">Alternative Ingredients</span>
-            <span class="pill">B2B Solution</span>
-          </div>
-
-          <h1 class="title">Shared flavors,<br/>shared memory!</h1>
-
-          <p class="subtitle">
-            원물 없이도 ‘원물 같은 맛’을 구현하는 대체 원료 기반 솔루션.
-            식품 개발에서 가장 큰 허들을 줄이고, 더 빠르게 제품 컨셉을 검증할 수 있도록 연결합니다.
-            <br/><br/>
-            <b style="color:var(--line);">플레이버링크</b>는 “원료 → 맛 경험 → 제품”을 한 장으로 설득하는 방식으로 전개됩니다.
-          </p>
-
-          <div class="heroActions">
-            <a class="btn primary" href="#cta">지금 문의하기 →</a>
-            <a class="btn" href="product.html" title="다음 단계: 상품 페이지">상품페이지 만들기 🛒</a>
-            <a class="btn ghost" href="#features">기능 보기 ↓</a>
-          </div>
-
-          <div class="hint">
-            <span class="spark" aria-hidden="true"></span>
-            <span>키비주얼 톤(오렌지 라인/콜라주 감성)을 UI로 반영한 메인 페이지</span>
-          </div>
-        </div>
-
-        <aside class="panel heroRight" aria-label="Key Visual">
-          <div class="kvFrame">
-            <!-- ✅ 여기 이미지 파일만 너 GitHub에 올린 파일명으로 바꾸면 됨 -->
-            <div class="kvLabel">
-              <span class="pill"><strong>Key Visual</strong></span>
-              <span class="pill">Orange line & collage</span>
-            </div>
-            <img src="assets/keyvisual.jpg" alt="FlavorLink Key Visual" />
-          </div>
-
-          <div style="margin-top:12px; color:rgba(90,81,75,.88); font-size:13px; line-height:1.55;">
-            <b>Tip:</b> 첨부한 포스터 중 하나를 <code style="background:rgba(255,255,255,.65); padding:2px 6px; border-radius:8px; border:1px solid rgba(240,90,40,.16);">assets/keyvisual.jpg</code>
-            로 저장해두면 GitHub Pages에서 바로 보입니다.
-          </div>
-        </aside>
+<!-- HERO -->
+<section class="hero" id="about">
+  <div class="wrap heroGrid">
+    <div class="panel">
+      <h1>Shared flavors,<br/>shared memory!</h1>
+      <p>
+        원물 없이도 원물의 맛을 재현하는 대체 원료 기반 솔루션.<br/>
+        플레이버링크는 “맛 경험”을 중심으로 제품 개발을 더 빠르게 연결합니다.
+      </p>
+      <div class="heroActions">
+        <a class="btn primary" href="#cta">지금 문의하기</a>
+        <a class="btn" href="product.html">상품페이지</a>
       </div>
     </div>
-  </section>
 
-  <!-- FEATURES -->
-  <section id="features">
-    <div class="wrap">
-      <div class="secHead">
-        <div>
-          <h2>기능 카드 3개</h2>
-          <p>한 번에 이해되는 구조. “무슨 문제를 어떤 방식으로 해결하는지”를 3장으로 정리합니다.</p>
-        </div>
-        <a class="btn" href="#cta">CTA로 이동 ↘</a>
+    <div class="panel kv">
+      <!-- ✅ 네 images 폴더 이미지 적용 완료 -->
+      <img src="images/KakaoTalk_Photo_2026-01-06-20-22-27%20002.jpeg" alt="FlavorLink Key Visual">
+      <p style="margin-top:10px;font-size:13px;color:var(--muted);">
+        Tip: images/KakaoTalk_Photo_2026-01-06-20-22-27 002.jpeg
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="wrap">
+    <h2 style="font-family:Fraunces,serif;">기능 카드 3개</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>원물 없는 맛 구현</h3>
+        <p>육류·해산물·채소의 맛을 대체 원료로 설계합니다.</p>
       </div>
-
-      <div class="cards">
-        <article class="card">
-          <div class="icon" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2v6" stroke="#1D1D1D" stroke-width="2" stroke-linecap="round"/>
-              <path d="M7 5l3 5" stroke="#1D1D1D" stroke-width="2" stroke-linecap="round"/>
-              <path d="M17 5l-3 5" stroke="#1D1D1D" stroke-width="2" stroke-linecap="round"/>
-              <path d="M6 14c0-3.314 2.686-6 6-6s6 2.686 6 6-2.686 8-6 8-6-4.686-6-8Z" stroke="#1D1D1D" stroke-width="2"/>
-            </svg>
-          </div>
-          <h3>원물 없이 원물의 맛 재현</h3>
-          <p>육류/해산물/채소 등 원물 의존도를 낮추고, 맛 프로파일을 설계 가능한 형태로 제공합니다.</p>
-          <div class="stroke" aria-hidden="true"></div>
-        </article>
-
-        <article class="card">
-          <div class="icon" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M4 12h16" stroke="#1D1D1D" stroke-width="2" stroke-linecap="round"/>
-              <path d="M12 4v16" stroke="#1D1D1D" stroke-width="2" stroke-linecap="round"/>
-              <path d="M7 7l10 10" stroke="#1D1D1D" stroke-width="2" stroke-linecap="round" opacity=".9"/>
-              <path d="M17 7 7 17" stroke="#1D1D1D" stroke-width="2" stroke-linecap="round" opacity=".7"/>
-            </svg>
-          </div>
-          <h3>빠른 검증 루프</h3>
-          <p>샘플링 → 테스트 → 개선의 반복을 짧게. 제품 개발 속도를 끌어올리는 실험 구조를 만듭니다.</p>
-          <div class="stroke" aria-hidden="true"></div>
-        </article>
-
-        <article class="card">
-          <div class="icon" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M4 20V8" stroke="#1D1D1D" stroke-width="2" stroke-linecap="round"/>
-              <path d="M10 20V4" stroke="#1D1D1D" stroke-width="2" stroke-linecap="round"/>
-              <path d="M16 20v-9" stroke="#1D1D1D" stroke-width="2" stroke-linecap="round"/>
-              <path d="M22 20v-6" stroke="#1D1D1D" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <h3>브랜드형 커뮤니케이션</h3>
-          <p>기술을 “설명”이 아니라 “설득”으로 전환. 구매/협업 의사결정이 쉬운 구조로 정리합니다.</p>
-          <div class="stroke" aria-hidden="true"></div>
-        </article>
+      <div class="card">
+        <h3>빠른 검증 구조</h3>
+        <p>샘플 → 테스트 → 개선까지의 속도를 단축합니다.</p>
+      </div>
+      <div class="card">
+        <h3>브랜드형 설득</h3>
+        <p>기술이 아닌 ‘경험’ 중심의 커뮤니케이션을 제공합니다.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- CTA -->
-  <section id="cta">
-    <div class="wrap">
-      <div class="cta">
-        <div class="ctaTxt">
-          <h3>플레이버링크와 함께, 다음 제품을 더 빠르게.</h3>
-          <p>
-            메인 1장 완성. 다음은 <b>상품페이지(product.html)</b>로 넘어가서
-            제품 리스트/상세/구매 흐름을 붙이면 “사이트 골격”이 끝납니다.
-          </p>
-        </div>
-        <div class="ctaActions">
-          <a class="btn primary" href="mailto:hello@example.com?subject=FlavorLink%20Inquiry">메일로 문의 ✉️</a>
-          <a class="btn" href="product.html">상품페이지 만들기 🧩</a>
-          <a class="btn ghost" href="#top">맨 위로 ↑</a>
-        </div>
+<!-- CTA -->
+<section id="cta">
+  <div class="wrap">
+    <div class="cta">
+      <div>
+        <h3 style="margin:0 0 6px;">플레이버링크와 함께 시작하세요</h3>
+        <p>다음 단계는 상품페이지(product.html)입니다.</p>
+      </div>
+      <div>
+        <a class="btn" href="mailto:hello@example.com">메일 문의</a>
+        <a class="btn" href="product.html">상품페이지</a>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="wrap">
-      <div class="footerGrid">
-        <div>
-          <div class="brand" style="gap:10px;">
-            <div class="mark" aria-hidden="true" style="width:36px;height:36px;border-radius:14px;"></div>
-            <div class="brandTitle">
-              <b>FlavorLink</b>
-              <span>Shared flavors, shared memory</span>
-            </div>
-          </div>
-          <div class="fine">
-            © <span id="year"></span> FlavorLink Demo. UI prototype for GitHub Pages.<br/>
-            Visual style inspired by the provided key visual (orange curves + warm paper + collage mood).
-          </div>
-        </div>
-
-        <div class="footLinks" aria-label="Footer links">
-          <a href="#about">소개</a>
-          <a href="#features">기능</a>
-          <a href="#cta">문의</a>
-          <a href="product.html" title="다음 단계">상품페이지(예정)</a>
-        </div>
-      </div>
-    </div>
-  </footer>
 </main>
 
+<footer>
+  <div class="wrap">
+    © <span id="year"></span> FlavorLink. Demo site for GitHub Pages.
+  </div>
+</footer>
+
 <script>
-  // Mobile menu toggle
-  const menuBtn = document.getElementById('menuBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-
-  function setExpanded(open){
-    menuBtn?.setAttribute('aria-expanded', String(open));
-    document.body.classList.toggle('menuOpen', open);
-  }
-
-  menuBtn?.addEventListener('click', () => {
-    setExpanded(!document.body.classList.contains('menuOpen'));
-  });
-
-  mobileMenu?.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => setExpanded(false));
-  });
-
-  // Smooth scroll for same-page anchors
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', (e) => {
-      const id = a.getAttribute('href');
-      if (!id || id.length < 2) return;
-      const el = document.querySelector(id);
-      if (!el) return;
-      e.preventDefault();
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  });
-
-  // Year
-  document.getElementById('year').textContent = new Date().getFullYear();
+  document.getElementById("year").textContent = new Date().getFullYear();
 </script>
+
 </body>
 </html>
